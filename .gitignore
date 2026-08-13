@@ -1,0 +1,20 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.streamlit/
+.env
+.DS_Store
+
+data/warehouse.duckdb
+data/raw/
+!data/raw/.gitkeep
+notebooks/.ipynb_checkpoints/
+
+# Generated databases
+data/sample.duckdb
+
+# Build/test artifacts
+*.egg-info/
+.coverage
+htmlcov/

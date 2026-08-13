@@ -1,0 +1,62 @@
+tickers:
+  AMZN:
+    company_name: Amazon.com, Inc.
+    subsector: E-commerce / Broadline Retail
+    brand_keywords: [Amazon shopping, Amazon Prime]
+  WMT:
+    company_name: Walmart Inc.
+    subsector: Big-box Retail
+    brand_keywords: [Walmart, Walmart shopping]
+  TGT:
+    company_name: Target Corporation
+    subsector: Big-box Retail
+    brand_keywords: [Target store, Target shopping]
+  COST:
+    company_name: Costco Wholesale Corporation
+    subsector: Warehouse Clubs
+    brand_keywords: [Costco, Costco membership]
+  HD:
+    company_name: The Home Depot, Inc.
+    subsector: Home Improvement
+    brand_keywords: [Home Depot, Home Depot tools]
+  LOW:
+    company_name: Lowe's Companies, Inc.
+    subsector: Home Improvement
+    brand_keywords: [Lowes, Lowes home improvement]
+  TJX:
+    company_name: The TJX Companies, Inc.
+    subsector: Off-price Apparel
+    brand_keywords: [TJ Maxx, Marshalls]
+  ROST:
+    company_name: Ross Stores, Inc.
+    subsector: Off-price Apparel
+    brand_keywords: [Ross Dress for Less, Ross Stores]
+  BBY:
+    company_name: Best Buy Co., Inc.
+    subsector: Electronics Retail
+    brand_keywords: [Best Buy, Best Buy electronics]
+  NKE:
+    company_name: NIKE, Inc.
+    subsector: Apparel / Footwear
+    brand_keywords: [Nike shoes, Nike sale]
+  LULU:
+    company_name: lululemon athletica inc.
+    subsector: Apparel / Athleisure
+    brand_keywords: [Lululemon, Lululemon sale]
+  ULTA:
+    company_name: Ulta Beauty, Inc.
+    subsector: Beauty Retail
+    brand_keywords: [Ulta Beauty, Ulta sale]
+  DG:
+    company_name: Dollar General Corporation
+    subsector: Dollar Stores
+    brand_keywords: [Dollar General, Dollar General store]
+  DLTR:
+    company_name: Dollar Tree, Inc.
+    subsector: Dollar Stores
+    brand_keywords: [Dollar Tree, Dollar Tree store]
+
+pairs:
+  - [HD, LOW]
+  - [TJX, ROST]
+  - [DG, DLTR]

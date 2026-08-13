@@ -1,0 +1,11 @@
+duckdb>=1.5,<2
+numpy>=2.0,<3
+pandas>=2.2,<3
+plotly>=6,<7
+pytrends==4.9.2
+PyYAML>=6,<7
+requests>=2.32,<3
+statsmodels>=0.14,<1
+streamlit>=1.48,<2
+yfinance>=1.4,<2
+pytest>=8,<10
