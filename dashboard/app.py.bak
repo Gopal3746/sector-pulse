@@ -1,0 +1,108 @@
+from __future__ import annotations
+
+import os
+from pathlib import Path
+
+import duckdb
+import pandas as pd
+import plotly.graph_objects as go
+import streamlit as st
+from plotly.subplots import make_subplots
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_DB = PROJECT_ROOT / "data" / "sample.duckdb"
+DB_PATH = Path(os.getenv("SECTOR_PULSE_DB", DEFAULT_DB))
+
+st.set_page_config(page_title="Sector Pulse", page_icon="📈", layout="wide")
+st.title("Sector Pulse")
+st.caption("Retail sector alt-data tracker — prices, Google Trends proxies, SEC filings, anomalies, and peer divergence")
+
+if DB_PATH.exists():
+    conn = duckdb.connect(str(DB_PATH), read_only=True)
+    db_label = str(DB_PATH)
+else:
+    from src.demo import build_demo
+    conn = duckdb.connect(":memory:")
+    build_demo(conn)
+    db_label = "in-memory deterministic demo (run `make demo` to persist data/sample.duckdb)"
+ticker_df = conn.execute("SELECT * FROM dim_ticker ORDER BY ticker").df()
+if ticker_df.empty:
+    st.warning("No tickers loaded.")
+    st.stop()
+
+left, right = st.columns([1, 3])
+with left:
+    ticker = st.selectbox("Ticker", ticker_df["ticker"].tolist(), index=0)
+    company = ticker_df.loc[ticker_df.ticker == ticker].iloc[0]
+    st.metric("Company", company["company_name"])
+    st.caption(company["subsector"])
+
+price = conn.execute("SELECT * FROM fact_price WHERE ticker = ? ORDER BY date", [ticker]).df()
+trends = conn.execute("SELECT * FROM fact_trends WHERE ticker = ? ORDER BY date", [ticker]).df()
+filings = conn.execute("SELECT * FROM fact_filings WHERE ticker = ? ORDER BY filing_date", [ticker]).df()
+anomalies = conn.execute("SELECT * FROM fact_anomaly WHERE ticker = ? AND flagged ORDER BY date DESC", [ticker]).df()
+financials = conn.execute("SELECT * FROM fact_financials WHERE ticker = ? ORDER BY period_end", [ticker]).df()
+
+with right:
+    latest = price.iloc[-1] if not price.empty else None
+    flagged_90 = anomalies[pd.to_datetime(anomalies["date"]) >= (pd.Timestamp.today() - pd.Timedelta(days=90))] if not anomalies.empty else anomalies
+    c1, c2, c3 = st.columns(3)
+    c1.metric("Latest close", f"${latest['close']:,.2f}" if latest is not None else "—")
+    c2.metric("90d anomaly flags", int(len(flagged_90)))
+    c3.metric("Filings loaded", int(len(filings)))
+
+fig = make_subplots(specs=[[{"secondary_y": True}]])
+if not price.empty:
+    fig.add_trace(go.Scatter(x=price["date"], y=price["close"], name="Close"), secondary_y=False)
+if not trends.empty:
+    weekly = trends.groupby("date", as_index=False)["interest_score"].mean()
+    fig.add_trace(go.Scatter(x=weekly["date"], y=weekly["interest_score"], name="Mean search interest"), secondary_y=True)
+if not filings.empty and not price.empty:
+    price_lookup = price.set_index(pd.to_datetime(price["date"]))["close"]
+    marker_dates, marker_prices, marker_labels = [], [], []
+    for row in filings.itertuples():
+        dt = pd.Timestamp(row.filing_date)
+        nearest_idx = price_lookup.index.get_indexer([dt], method="nearest")[0]
+        marker_dates.append(dt)
+        marker_prices.append(price_lookup.iloc[nearest_idx])
+        marker_labels.append(row.filing_type)
+    fig.add_trace(go.Scatter(x=marker_dates, y=marker_prices, mode="markers", marker_symbol="diamond", marker_size=8, name="SEC filings", text=marker_labels), secondary_y=False)
+fig.update_layout(height=480, margin=dict(l=10, r=10, t=35, b=10), legend_orientation="h", hovermode="x unified")
+fig.update_yaxes(title_text="Price", secondary_y=False)
+fig.update_yaxes(title_text="Search interest (0-100)", secondary_y=True)
+st.plotly_chart(fig, use_container_width=True)
+
+c1, c2 = st.columns([2, 1])
+with c1:
+    st.subheader("Flagged anomalies")
+    if anomalies.empty:
+        st.info("No anomaly flags for this ticker.")
+    else:
+        view = anomalies[["date", "metric", "value", "z_score", "description"]].copy()
+        view["z_score"] = view["z_score"].round(2)
+        st.dataframe(view, use_container_width=True, hide_index=True)
+
+with c2:
+    st.subheader("Latest financial facts")
+    if financials.empty:
+        st.info("No financial facts loaded.")
+    else:
+        latest_fin = financials.sort_values("period_end").groupby("tag", as_index=False).tail(1).copy()
+        latest_fin["value"] = latest_fin["value"].map(lambda x: f"${x/1e9:,.1f}B")
+        st.dataframe(latest_fin[["tag", "period_end", "value"]], use_container_width=True, hide_index=True)
+
+st.subheader("Peer-pair divergence")
+pairs = conn.execute("SELECT DISTINCT pair FROM fact_pair_divergence ORDER BY pair").df()["pair"].tolist()
+if pairs:
+    selected_pair = st.selectbox("Pair", pairs)
+    pair_df = conn.execute("SELECT * FROM fact_pair_divergence WHERE pair = ? ORDER BY date", [selected_pair]).df()
+    pair_fig = go.Figure()
+    pair_fig.add_trace(go.Scatter(x=pair_df["date"], y=pair_df["z_score"], name="Return divergence z-score"))
+    flagged = pair_df[pair_df["flagged"]]
+    pair_fig.add_trace(go.Scatter(x=flagged["date"], y=flagged["z_score"], mode="markers", name="Flagged"))
+    pair_fig.update_layout(height=300, margin=dict(l=10, r=10, t=20, b=10))
+    st.plotly_chart(pair_fig, use_container_width=True)
+else:
+    st.caption("Load both members of a configured peer pair to populate this section.")
+
+st.caption(f"Database: {db_label}")
