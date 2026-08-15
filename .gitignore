@@ -18,3 +18,4 @@ data/sample.duckdb
 *.egg-info/
 .coverage
 htmlcov/
+*.bak
