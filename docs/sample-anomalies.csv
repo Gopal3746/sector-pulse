@@ -1,0 +1,26 @@
+ticker,metric,date,value,z_score,flagged,description
+HD,trends:Home Depot,2025-06-01,30.405408517922424,-64.34636146498401,True,HD trends:Home Depot 64.3σ below its trailing residual mean
+HD,trends:Home Depot tools,2025-12-28,44.50044584847038,12.459450373993649,True,HD trends:Home Depot tools 12.5σ above its trailing residual mean
+HD,trends:Home Depot tools,2024-11-10,45.01653767693594,11.752377766428813,True,HD trends:Home Depot tools 11.8σ above its trailing residual mean
+LOW,trends:Lowes home improvement,2025-03-02,31.932178020644574,10.20653594771242,True,LOW trends:Lowes home improvement 10.2σ above its trailing residual mean
+HD,trends:Home Depot tools,2026-01-11,37.73170710656775,8.965948477312097,True,HD trends:Home Depot tools 9.0σ above its trailing residual mean
+HD,trends:Home Depot tools,2026-07-26,46.234947927576094,8.434281686024004,True,HD trends:Home Depot tools 8.4σ above its trailing residual mean
+LOW,trends:Lowes home improvement,2025-08-10,51.71767377491617,-7.857410914227796,True,LOW trends:Lowes home improvement 7.9σ below its trailing residual mean
+HD,trends:Home Depot tools,2025-11-02,57.64161459912743,-5.5320125830765035,True,HD trends:Home Depot tools 5.5σ below its trailing residual mean
+HD,price,2025-11-12,56.64256748502856,5.430263245264844,True,HD price 5.4σ above its trailing residual mean
+HD,volume,2025-03-11,2015635.0,-5.339584812428304,True,HD volume 5.3σ below its trailing residual mean
+LOW,price,2026-01-20,54.06343602213375,-5.032242035151115,True,LOW price 5.0σ below its trailing residual mean
+HD,trends:Home Depot tools,2025-10-05,56.70784186456963,-5.006222222222221,True,HD trends:Home Depot tools 5.0σ below its trailing residual mean
+LOW,volume,2025-10-09,17344583.0,4.708300113999428,True,LOW volume 4.7σ above its trailing residual mean
+HD,price,2024-09-20,73.31843580609582,4.3939313251467516,True,HD price 4.4σ above its trailing residual mean
+HD,trends:Home Depot tools,2025-11-16,49.55621015591515,4.369961998600057,True,HD trends:Home Depot tools 4.4σ above its trailing residual mean
+LOW,volume,2025-02-24,17779262.0,4.324509527566367,True,LOW volume 4.3σ above its trailing residual mean
+LOW,volume,2025-05-26,3469605.0,-4.322440203315119,True,LOW volume 4.3σ below its trailing residual mean
+HD,price,2026-06-11,45.34609259507503,-4.2833066720378286,True,HD price 4.3σ below its trailing residual mean
+HD,price,2025-02-26,54.124578030238965,-4.260616222032846,True,HD price 4.3σ below its trailing residual mean
+LOW,price,2025-01-17,80.47439614461335,4.196397045429115,True,LOW price 4.2σ above its trailing residual mean
+HD,volume,2026-05-11,2108000.0,-4.134698203202703,True,HD volume 4.1σ below its trailing residual mean
+HD,price,2026-04-29,53.604234325557854,4.062728545557687,True,HD price 4.1σ above its trailing residual mean
+LOW,trends:Lowes,2025-06-29,45.07891256885773,4.041956869640463,True,LOW trends:Lowes 4.0σ above its trailing residual mean
+LOW,price,2025-10-31,62.08416050408366,4.0016557893828,True,LOW price 4.0σ above its trailing residual mean
+LOW,volume,2026-02-19,17599834.0,3.9981665770888806,True,LOW volume 4.0σ above its trailing residual mean
